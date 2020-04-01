@@ -3,14 +3,18 @@
 LOGDIR="/logs"
 LOGFILE="$LOGDIR/access.log"
 
-if [ ! -d "${LOGDIR}" ]; then
+STDOUT_LOGGING="${STDOUT_LOGGING:-false}"
+
+if [ "$STDOUT_LOGGING" != "true" ]; then
+  if [ ! -d "${LOGDIR}" ]; then
     mkdir -p "${LOGDIR}"
     chown www-data "${LOGDIR}"
-fi
+  fi
 
-if [ ! -f "${LOGFILE}" ]; then
+  if [ ! -f "${LOGFILE}" ]; then
     touch "${LOGFILE}"
     chown www-data "${LOGFILE}"
+  fi
 fi
 
 if [ -f /etc/nginx/sites-enabled/default ]; then
@@ -70,5 +74,7 @@ if [ -d "${SRC_DIR}" ]; then
   done
 fi
 
-exec tail -F ${LOGFILE} &
+if [ "$STDOUT_LOGGING" != "true" ]; then
+  exec tail -F ${LOGFILE} &
+fi
 exec "$@"
