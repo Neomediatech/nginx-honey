@@ -1,4 +1,4 @@
-FROM neomediatech/ubuntu-base:latest
+FROM neomediatech/ubuntu-base:20.04
 
 ENV VERSION=from-ubuntu \
     SERVICE=nginx-honey
